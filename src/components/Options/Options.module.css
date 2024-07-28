@@ -1,0 +1,5 @@
+.options {
+  display: flex;
+  margin-bottom: 16px;
+  gap: 4px;
+}
