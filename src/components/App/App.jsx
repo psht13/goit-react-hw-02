@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import Description from '../Description/Description';
 import Feedback from '../Feedback/Feedback';
 import Notification from '../Notification/Notification';
@@ -7,15 +6,13 @@ import { useState, useEffect } from 'react';
 
 function App() {
   let stats = JSON.parse(localStorage.getItem('stats')) ?? {
-    totalFeedback: 0,
-    positiveFeedback: 0,
     good: 0,
     bad: 0,
     neutral: 0,
   };
 
-  let totalFeedback = stats.totalFeedback;
-  let positiveFeedback = stats.positiveFeedback;
+  let totalFeedback = 0;
+  let positiveFeedback = 0;
 
   const [feedback, setFeedback] = useState({
     good: stats.good,
@@ -23,32 +20,20 @@ function App() {
     bad: stats.bad,
   });
 
-  const [isAnyFeedback, setIsAnyFeedback] = useState(false);
-
   totalFeedback = feedback.good + feedback.neutral + feedback.bad;
-  positiveFeedback = Math.round(
-    ((feedback.good + feedback.neutral) / totalFeedback) * 100
-  );
+  positiveFeedback = Math.round((feedback.good / totalFeedback) * 100);
 
-  useEffect(updateAllStats, [feedback]);
+  useEffect(updateStats, [feedback]);
 
-  useEffect(updateFeedbackVisibility, [totalFeedback]);
-
-  function updateAllStats() {
+  function updateStats() {
     localStorage.setItem(
       'stats',
       JSON.stringify({
-        totalFeedback: totalFeedback,
-        positiveFeedback: positiveFeedback,
         good: feedback.good,
         bad: feedback.bad,
         neutral: feedback.neutral,
       })
     );
-  }
-
-  function updateFeedbackVisibility() {
-    setIsAnyFeedback(Boolean(totalFeedback));
   }
 
   function updateFeedback(type) {
@@ -60,9 +45,8 @@ function App() {
 
   function resetFeedback() {
     setFeedback({ good: 0, neutral: 0, bad: 0 });
-    totalFeedback = 0;
-    positiveFeedback = 0;
-    localStorage.clear();
+
+    localStorage.removeItem('stats');
   }
 
   return (
@@ -71,10 +55,9 @@ function App() {
       <Options
         updateFeedback={updateFeedback}
         resetFeedback={resetFeedback}
-        updateFeedbackVisibility={updateFeedbackVisibility}
-        isAnyFeedback={isAnyFeedback}
+        totalFeedback={totalFeedback}
       />
-      {isAnyFeedback ? (
+      {totalFeedback ? (
         <Feedback
           good={feedback.good}
           neutral={feedback.neutral}

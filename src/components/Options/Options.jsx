@@ -1,46 +1,35 @@
 import css from './Options.module.css';
 
-function Options({
-  updateFeedback,
-  resetFeedback,
-  updateFeedbackVisibility,
-  isAnyFeedback,
-}) {
+function Options({ updateFeedback, resetFeedback, totalFeedback }) {
   return (
     <div className={css.options}>
       <button
-        onClick={(e) => {
-          updateFeedback(e.currentTarget.textContent.toLocaleLowerCase());
+        onClick={() => {
+          updateFeedback('good');
         }}
         type="button"
       >
         Good
       </button>
       <button
-        onClick={(e) => {
-          updateFeedback(e.currentTarget.textContent.toLocaleLowerCase());
+        onClick={() => {
+          updateFeedback('neutral');
         }}
         type="button"
       >
         Neutral
       </button>
       <button
-        onClick={(e) => {
-          updateFeedback(e.currentTarget.textContent.toLocaleLowerCase());
+        onClick={() => {
+          updateFeedback('bad');
         }}
         type="button"
       >
         Bad
       </button>
 
-      {isAnyFeedback && (
-        <button
-          onClick={() => {
-            resetFeedback();
-            updateFeedbackVisibility();
-          }}
-          type="button"
-        >
+      {Boolean(totalFeedback) && (
+        <button onClick={resetFeedback} type="button">
           Reset
         </button>
       )}
